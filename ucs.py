@@ -7,7 +7,7 @@ start_time = time.time()
 initial_puzzle = [[3, 0, 1, 4], [2, 6, 5, 7]]
 
 # Initial config
-initial_state = PuzzleState(initial_puzzle, None, 0)
+initial_state = PuzzleState(initial_puzzle, None, 0, 0)
 open_list = []
 heapq.heappush(open_list, (initial_state.cost, initial_state))
 closed_list = []

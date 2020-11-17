@@ -2,10 +2,11 @@ import copy
 
 
 class PuzzleState:
-    def __init__(self, configuration, parent, cost):
+    def __init__(self, configuration, parent, cost, heuristic):
         self.configuration = configuration
         self.parent = parent
         self.cost = cost
+        self.heuristic = heuristic
 
     def __lt__(self, state):
         return self.cost < state.cost
@@ -40,22 +41,22 @@ class PuzzleState:
             move_left_config = copy.deepcopy(self.configuration)
             move_left_config[row_0][column_0] = move_left_config[row_0][column_0 - 1]
             move_left_config[row_0][column_0 - 1] = 0
-            children.append(PuzzleState(move_left_config, self, self.cost + 1))
+            children.append(PuzzleState(move_left_config, self, self.cost + 1, 0))
         if column_0 != len(self.configuration[0]) - 1:
             move_right_config = copy.deepcopy(self.configuration)
             move_right_config[row_0][column_0] = move_right_config[row_0][column_0 + 1]
             move_right_config[row_0][column_0 + 1] = 0
-            children.append(PuzzleState(move_right_config, self, self.cost + 1))
+            children.append(PuzzleState(move_right_config, self, self.cost + 1, 0))
         if row_0 != len(self.configuration) - 1:
             move_down_config = copy.deepcopy(self.configuration)
             move_down_config[row_0][column_0] = move_down_config[row_0 + 1][column_0]
             move_down_config[row_0 + 1][column_0] = 0
-            children.append(PuzzleState(move_down_config, self, self.cost + 1))
+            children.append(PuzzleState(move_down_config, self, self.cost + 1, 0))
         if row_0 != 0:
             move_up_config = copy.deepcopy(self.configuration)
             move_up_config[row_0][column_0] = move_up_config[row_0 - 1][column_0]
             move_up_config[row_0 - 1][column_0] = 0
-            children.append(PuzzleState(move_up_config, self, self.cost + 1))
+            children.append(PuzzleState(move_up_config, self, self.cost + 1, 0))
         # Wrapping and diagonal moves
         if row_0 == 0 and column_0 == 0:
             wrapping_move_config = copy.deepcopy(self.configuration)
@@ -63,13 +64,13 @@ class PuzzleState:
                 len(wrapping_move_config[row_0]) - 1
             ]
             wrapping_move_config[row_0][len(wrapping_move_config[row_0]) - 1] = 0
-            children.append(PuzzleState(wrapping_move_config, self, self.cost + 2))
+            children.append(PuzzleState(wrapping_move_config, self, self.cost + 2, 0))
             diagonal_move_1_config = copy.deepcopy(self.configuration)
             diagonal_move_1_config[row_0][column_0] = diagonal_move_1_config[row_0 + 1][
                 column_0 + 1
             ]
             diagonal_move_1_config[row_0 + 1][column_0 + 1] = 0
-            children.append(PuzzleState(diagonal_move_1_config, self, self.cost + 3))
+            children.append(PuzzleState(diagonal_move_1_config, self, self.cost + 3, 0))
             diagonal_move_2_config = copy.deepcopy(self.configuration)
             diagonal_move_2_config[row_0][column_0] = diagonal_move_2_config[
                 len(diagonal_move_2_config) - 1
@@ -77,45 +78,45 @@ class PuzzleState:
             diagonal_move_2_config[len(diagonal_move_2_config) - 1][
                 len(diagonal_move_2_config[row_0]) - 1
             ] = 0
-            children.append(PuzzleState(diagonal_move_2_config, self, self.cost + 3))
+            children.append(PuzzleState(diagonal_move_2_config, self, self.cost + 3, 0))
         if row_0 == 0 and column_0 == len(self.configuration[0]) - 1:
             wrapping_move_config = copy.deepcopy(self.configuration)
             wrapping_move_config[row_0][
                 len(wrapping_move_config[row_0]) - 1
             ] = wrapping_move_config[0][0]
             wrapping_move_config[0][0] = 0
-            children.append(PuzzleState(wrapping_move_config, self, self.cost + 2))
+            children.append(PuzzleState(wrapping_move_config, self, self.cost + 2, 0))
             diagonal_move_1_config = copy.deepcopy(self.configuration)
             diagonal_move_1_config[row_0][column_0] = diagonal_move_1_config[row_0 + 1][
                 column_0 - 1
             ]
             diagonal_move_1_config[row_0 + 1][column_0 - 1] = 0
-            children.append(PuzzleState(diagonal_move_1_config, self, self.cost + 3))
+            children.append(PuzzleState(diagonal_move_1_config, self, self.cost + 3, 0))
             diagonal_move_2_config = copy.deepcopy(self.configuration)
             diagonal_move_2_config[row_0][column_0] = diagonal_move_2_config[row_0 + 1][
                 0
             ]
             diagonal_move_2_config[row_0 + 1][0] = 0
-            children.append(PuzzleState(diagonal_move_2_config, self, self.cost + 3))
+            children.append(PuzzleState(diagonal_move_2_config, self, self.cost + 3, 0))
         if row_0 == len(self.configuration) - 1 and column_0 == 0:
             wrapping_move_config = copy.deepcopy(self.configuration)
             wrapping_move_config[row_0][column_0] = wrapping_move_config[row_0][
                 len(wrapping_move_config[row_0]) - 1
             ]
             wrapping_move_config[row_0][len(wrapping_move_config[row_0]) - 1] = 0
-            children.append(PuzzleState(wrapping_move_config, self, self.cost + 2))
+            children.append(PuzzleState(wrapping_move_config, self, self.cost + 2, 0))
             diagonal_move_1_config = copy.deepcopy(self.configuration)
             diagonal_move_1_config[row_0][column_0] = diagonal_move_1_config[row_0 - 1][
                 column_0 + 1
             ]
             diagonal_move_1_config[row_0 - 1][column_0 + 1] = 0
-            children.append(PuzzleState(diagonal_move_1_config, self, self.cost + 3))
+            children.append(PuzzleState(diagonal_move_1_config, self, self.cost + 3, 0))
             diagonal_move_2_config = copy.deepcopy(self.configuration)
             diagonal_move_2_config[row_0][column_0] = diagonal_move_2_config[0][
                 len(diagonal_move_2_config[row_0]) - 1
             ]
             diagonal_move_2_config[0][len(diagonal_move_2_config[row_0]) - 1] = 0
-            children.append(PuzzleState(diagonal_move_2_config, self, self.cost + 3))
+            children.append(PuzzleState(diagonal_move_2_config, self, self.cost + 3, 0))
         if (
             row_0 == len(self.configuration) - 1
             and column_0 == len(self.configuration[0]) - 1
@@ -123,15 +124,15 @@ class PuzzleState:
             wrapping_move_config = copy.deepcopy(self.configuration)
             wrapping_move_config[row_0][column_0] = wrapping_move_config[row_0][0]
             wrapping_move_config[row_0][0] = 0
-            children.append(PuzzleState(wrapping_move_config, self, self.cost + 2))
+            children.append(PuzzleState(wrapping_move_config, self, self.cost + 2, 0))
             diagonal_move_1_config = copy.deepcopy(self.configuration)
             diagonal_move_1_config[row_0][column_0] = diagonal_move_1_config[row_0 - 1][
                 column_0 - 1
             ]
             diagonal_move_1_config[row_0 - 1][column_0 - 1] = 0
-            children.append(PuzzleState(diagonal_move_1_config, self, self.cost + 3))
+            children.append(PuzzleState(diagonal_move_1_config, self, self.cost + 3, 0))
             diagonal_move_2_config = copy.deepcopy(self.configuration)
             diagonal_move_2_config[row_0][column_0] = diagonal_move_2_config[0][0]
             diagonal_move_2_config[0][0] = 0
-            children.append(PuzzleState(diagonal_move_2_config, self, self.cost + 3))
+            children.append(PuzzleState(diagonal_move_2_config, self, self.cost + 3, 0))
         return children
