@@ -7,6 +7,9 @@ class PuzzleState:
         self.parent = parent
         self.cost = cost
 
+    def __lt__(self, state):
+        return self.cost < state.cost
+
     def find_empty_tile(self, configuration):
         for row in range(0, len(configuration)):
             for column in range(0, len(configuration[0])):
@@ -132,9 +135,3 @@ class PuzzleState:
             diagonal_move_2_config[0][0] = 0
             children.append(PuzzleState(diagonal_move_2_config, self, self.cost + 3))
         return children
-
-
-# Testing
-state = PuzzleState(configuration=[[1, 2, 3, 4], [5, 6, 7, 0]], parent=None, cost=0)
-for x in state.generate_children():
-    print(f"Config: {x.configuration}, cost: {x.cost}")
