@@ -112,7 +112,7 @@ class PuzzleState:
     def reconstruct_solution_path(self):
         solution_path = []
         current_node = self
-        while current_node.parent is not None:
+        while current_node:
             solution_path.insert(0, current_node)
             current_node = current_node.parent
         return solution_path
