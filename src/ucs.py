@@ -20,7 +20,11 @@ for count, puzzle in enumerate(puzzles):
     closed_list = []
     start_time = time.clock()
     done = False
+    no_solution_found = False
     while not done:
+        if time.clock() - start_time > 60:
+            done = True
+            no_solution_found = True
         if not open_list:
             print("No solution found.")
             done = True
@@ -42,9 +46,12 @@ for count, puzzle in enumerate(puzzles):
     path_to_output = Path.cwd().parent / "output"
     path_to_output.mkdir(parents=True, exist_ok=True)
     with open(path_to_output / f"{count}_ucs_solution.txt", "w") as f:
-        for step in solution_path:
-            step = [item for sublist in step.configuration for item in sublist]
-            step = [str(x) for x in step]
-            step = " ".join(step)
-            f.write(step + "\n")
-        f.write(str(solution_path_cost) + " " + str(execution_time))
+        if no_solution_found:
+            f.write("No solution found.")
+        else:
+            for step in solution_path:
+                step = [item for sublist in step.configuration for item in sublist]
+                step = [str(x) for x in step]
+                step = " ".join(step)
+                f.write(step + "\n")
+            f.write(str(solution_path_cost) + " " + str(execution_time))
