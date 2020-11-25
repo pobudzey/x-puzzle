@@ -16,7 +16,8 @@ puzzles = [
 for count, puzzle in enumerate(puzzles):
     # To run the algorithm with the second heuristic, do the following:
     # (1) Change h1 to h2 on line 21
-    # (2) Change h1 to h2 on line 51
+    # (2) Change h1 to h2 on line 54
+    # (2) Change h1 to h2 on line 56
     initial_state = PuzzleState(puzzle, None, 0, "h1")
     open_list = []
     heapq.heappush(
@@ -50,7 +51,7 @@ for count, puzzle in enumerate(puzzles):
                             )
     execution_time = time.clock() - start_time
 
-    path_to_output = Path.cwd().parent / "output"
+    path_to_output = Path.cwd().parent / "output" / "astar-h1"
     path_to_output.mkdir(parents=True, exist_ok=True)
     with open(path_to_output / f"{count}_astar-h1_solution.txt", "w") as f:
         if no_solution_found:
